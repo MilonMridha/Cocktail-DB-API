@@ -8,6 +8,7 @@ const loadCocktails = () => {
     }
     // LoadCocktails Data ---------------->
     else{
+        toggleSpinner('block');
         const url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${inputFieldText}`
     
         fetch(url)
@@ -15,38 +16,56 @@ const loadCocktails = () => {
         .then(data => displayCocktails(data.drinks))
     }
 }
+// toggle spinner function-------------->
+const toggleSpinner = displayStyle => {
+    document.getElementById('spinner').style.display = displayStyle;
+}
+
+
 //Display cocktail data in UI---------------->
+
 const displayCocktails = cocktails => {
-    cocktails.forEach(cocktail => {
-        const parentDiv = document.getElementById('main');
-        const div = document.createElement('div');
-        div.classList.add('col-lg-4');
-        div.classList.add('mt-3');
-        div.innerHTML = `
-        <div class="card" style="width: 18rem;">
-  <img src="${cocktail.strDrinkThumb} " class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">${cocktail.strDrink} </h5>
-    <p class="card-text">${cocktail.strInstructions?.slice(0, 80)} </p>
-    <a href="#" onclick="loadSeeDetails('${cocktail.idDrink}')" class="btn btn-primary">See Details</a>
-  </div>
-</div>
-        `
-        parentDiv.appendChild(div);
-    });
+    const main = document.getElementById('main');
+    main.innerHTML = '';
+    if(!cocktails){
+        alert('result not found')
+        toggleSpinner('none')
+    }
+    else{
+        cocktails.forEach(cocktail => {
+            const div = document.createElement('div');
+                div.classList.add('col-lg-4');
+                div.classList.add('mt-3');
+                div.innerHTML = `
+                <div class="card" style="width: 18rem;">
+          <img src="${cocktail.strDrinkThumb} " class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">${cocktail.strDrink} </h5>
+            <p class="card-text">${cocktail.strInstructions?.slice(0, 80)} </p>
+            <a href="#" onclick="loadSeeDetails('${cocktail.idDrink}')" class="btn btn-primary">See Details</a>
+          </div>
+        </div>
+                `
+                main.appendChild(div);
+                toggleSpinner('none');
+            });
+    }
+    
 
 }
 // Load See Details------------->
 const loadSeeDetails = drinkId => {
     const url = (`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${drinkId}`)
-    
+    toggleSpinner('block');
     fetch(url)
     .then(res => res.json())
     .then(data => displayDetails(data.drinks[0]))
 }
 // Display see details Div--------------->
 const displayDetails = drink => {
+   
     const drinkDiv = document.getElementById('drink');
+    drinkDiv.innerHTML = '';
     const div = document.createElement('div');
     div.innerHTML = `
     <div class="card" style="width: 18rem;">
@@ -61,5 +80,6 @@ const displayDetails = drink => {
     </div>
     `
     drinkDiv.appendChild(div);
+    toggleSpinner('none');
 }
 
