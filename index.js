@@ -1,3 +1,13 @@
+const searchBtn = document.getElementById('search-btn');
+const inputField = document.getElementById('input-field');
+
+inputField.addEventListener("keypress", function(event) {
+  // event.preventDefault();
+  if (event.keyCode == 13){
+    searchBtn.click();
+  }
+  
+});
 const loadCocktails = () => {
   const inputField = document.getElementById("input-field");
   const inputFieldText = inputField.value;
