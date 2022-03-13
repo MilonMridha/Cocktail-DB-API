@@ -3,7 +3,9 @@ const inputField = document.getElementById('input-field');
 
 inputField.addEventListener("keypress", function(event) {
   // event.preventDefault();
-  if (event.keyCode == 13){
+  console.log('keypress triggered', event.key);
+  if (event.key == 'Enter'){
+    console.log('inside Enter');
     searchBtn.click();
   }
   
